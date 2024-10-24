@@ -21,3 +21,8 @@ To answer the question we need data. On one hand country level [mortality rate](
 ## Importing and cleaning
 
 Both data sets are csv files, easily imported in SQL Server and cleaned as decribed in the [SQL query file](Portfolio_SQLQuery.sql)
+
+## Import to Power BI
+
+The prepared data tables are then used in Power BI to create a report.
+
