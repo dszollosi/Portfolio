@@ -26,3 +26,17 @@ Both data sets are csv files, easily imported in SQL Server and cleaned as decri
 
 The prepared data tables are then used in Power BI to create a report.
 
+	1 connect to the SQL Server
+	2 build data model
+
+In the MORTALITY table the age categories are repeated many times and also an ID column which can be used for sorting would be good. Let's normalize the Age_Group. The AgeKey=0 will be the all ages group.
+Also, the relationshp between the MORTALITY and RUGGEDNESS table need to be established through the country isocode. Since the country name is also stored in the RUGGEDNESS table we do not need to have it in the MORTALITY table repeated many times. 
+By that we arriver to a nice start-schema data model.
+
+	3 Build visuals
+
+We will need a couple of visuals to help decision making. First of all a table showing countries with mortality rate in decreasing order, these are our prime candidates.
+
+
+
+python for select an optimal target, weight as parmaters bar
