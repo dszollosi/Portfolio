@@ -1,6 +1,6 @@
 # Portfolio Project - Efficient Help
 
-![alt text](etc/uc.png)
+![alt text](https://github.com/dszollosi/Portfolio/blob/main/etc/uc.png)
 
 
 ## Setting up the stage
@@ -44,4 +44,4 @@ By that we arriver to a nice start-schema data model.
 We will need a couple of visuals to help decision making. First of all a table showing countries with mortality rate in decreasing order, these are our prime candidates.
 
 
-![alt text](screenshots/report_v0.png)
+![alt text](https://github.com/dszollosi/Portfolio/blob/main/screeshots/report_v0.png)
