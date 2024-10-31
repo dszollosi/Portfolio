@@ -1,6 +1,6 @@
 # Portfolio Project - Efficient Help
 
-[](etc/uc.png)
+![alt text](etc/uc.png)
 
 
 ## Setting up the stage
@@ -30,18 +30,18 @@ All data sets are csv files, easily imported in SQL Server and cleaned as decrib
 
 The prepared data tables are then used in Power BI to create a report.
 
-	1 connect to the SQL Server
-	2 import country size data as AREA
-	3 build data model
+1 connect to the SQL Server
+2 import country size data as AREA
+3 build data model
 
 In the MORTALITY table the age categories are repeated many times and also an ID column which can be used for sorting and filtering would be good. Let's normalize the Age_Group. The AgeKey=0 will be the all ages group. The AREA table contains many rows for non-country entities like a region of multiple countries *etc.* which we do not need here. Moreover, size data is given for many year from 1961 to 2024. We filter it to years present in the MORTALITY data.
 The relationshp between the MORTALITY and RUGGEDNESS table need to be established through the country isocode. Since the country name is also stored in the RUGGEDNESS table we do not need to have it in the MORTALITY table repeated many times. 
 To relate the AREA table to the MORTALITY table we devise a new ID column from the country code and the year.
 By that we arriver to a nice start-schema data model.
 
-	4 Build visuals
+4 Build visuals
 
 We will need a couple of visuals to help decision making. First of all a table showing countries with mortality rate in decreasing order, these are our prime candidates.
 
 
-[report](screenshots/report_v0.png)
+![alt text](screenshots/report_v0.png)
