@@ -1,8 +1,5 @@
 # Portfolio Project - Efficient Help
 
-![alt text](https://github.com/dszollosi/Portfolio/blob/main/etc/uc.png)
-
-
 ## Setting up the stage
 
 Imagine that an international charity organization called Efficient Help approaches us for support. Their objective is to help people in developing countries to improve their life expectancy but as their name suggests they want to do this efficiently. The mortality rate<sup>1</sup> is a good measure to detect places of the world where people would need help and also later to measure the effect of their actions. However, if the selected country is difficult to reach or traverse the resources are used up by the logistics. 
@@ -11,7 +8,7 @@ Imagine that an international charity organization called Efficient Help approac
 
 ## The question
 
-**Which country should Efficient Help go to help?**
+**Which country should Efficient Help go to?**
 
 The selected place should have a
   * high mortality rate indicating the need of help and the possible room for improvement
@@ -19,29 +16,46 @@ The selected place should have a
 
 ## The data
 
-To answer the question we need data. On one hand country level [mortality rate](https://public.tableau.com/app/sample-data/IHME_GBD_2010_MORTALITY_AGE_SPECIFIC_BY_COUNTRY_1970_2010.csv). On the other hand, [terrain ruggedness](https://diegopuga.org/data/rugged/) will tell us how rugged a country is and also wheter it is reachable from the sea. Terrain ruggedness alone is not sufficient as a rugged but small country is still relatively cheap to travel through due to small distances so we also include country [size data](https://ourworldindata.org/grapher/land-area-km)
+To answer the question we need data. On one hand country level [mortality rate](https://public.tableau.com/app/sample-data/IHME_GBD_2010_MORTALITY_AGE_SPECIFIC_BY_COUNTRY_1970_2010.csv). On the other hand, [terrain ruggedness](https://diegopuga.org/data/rugged/) will tell us how rugged a country is and also wheter it is reachable from the sea. 
 
 
 ## Importing and cleaning
 
-All data sets are csv files, easily imported in SQL Server and cleaned as decribed in the [SQL query file](Portfolio_SQLQuery.sql). The countr size data will be imported directly to Power BI
+All data sets are csv files, easily imported into SQL Server and cleaned and preprocessed as decribed in the [SQL query file](Portfolio_SQLQuery.sql). 
 
 ## Import to Power BI
 
 The prepared data tables are then used in Power BI to create a report.
 
 1 connect to the SQL Server
-2 import country size data as AREA
-3 build data model
+2 build data model
 
-In the MORTALITY table the age categories are repeated many times and also an ID column which can be used for sorting and filtering would be good. Let's normalize the Age_Group. The AgeKey=0 will be the all ages group. The AREA table contains many rows for non-country entities like a region of multiple countries *etc.* which we do not need here. Moreover, size data is given for many year from 1961 to 2024. We filter it to years present in the MORTALITY data.
-The relationshp between the MORTALITY and RUGGEDNESS table need to be established through the country isocode. Since the country name is also stored in the RUGGEDNESS table we do not need to have it in the MORTALITY table repeated many times. 
-To relate the AREA table to the MORTALITY table we devise a new ID column from the country code and the year.
+In the MORTALITY table the age categories are repeated many times and also an ID column which can be used for sorting and filtering would be good. Let's normalize the Age_Group. The AgeKey=0 will be the all ages group. 
+The relationshp between the MORTALITY and RUGGEDNESS table need to be established through the country isocode. Since the country name is also stored in the RUGGEDNESS table we do not need to have it in the MORTALITY table repeated many times thereby reduce the size of the table. 
 By that we arriver to a nice start-schema data model.
+
+![alt text](https://github.com/dszollosi/Portfolio/blob/main/screeshots/data_model_v0.png)
+
 
 4 Build visuals
 
-We will need a couple of visuals to help decision making. First of all a table showing countries with mortality rate in decreasing order, these are our prime candidates.
+We will need a couple of visuals to help decision making. First of all a table showing countries with mortality rate in decreasing order, these are our prime candidates. Next we want to know how rugged are our top candidates and whether they have a coast nearby. We add some slicers to specify the year of the data to the most recent one and that we are interesed a combined mortality for both sexes and all age groups. Haiti is the most prominent candidate. 
+Let's have a closer look to Haiti to see how the mortality changed over time. For that purpose a separate table is created by the follwoing DAX expression and used it as input for a visualizations.
+
+```
+Top Candidate = 
+VAR top_mortality = CALCULATE(MAX(MORTALITY[DeathRate]),
+    MORTALITY[AgeKey] = 0, 
+    MORTALITY[Sex] = "Both",
+    MORTALITY[Year] = 2010)
+VAR top_country_code = CALCULATE(MAX(MORTALITY[Country_Code]),
+    MORTALITY[DeathRate] = top_mortality)
+RETURN
+    FILTER(MORTALITY,MORTALITY[Country_Code] = top_country_code )
+
+```
+
+The mortality have even increased in the past so Haiti is definitely a good place for support. Moreover, the age group analysis tells that children are the most at risk.  
 
 
-![alt text](https://github.com/dszollosi/Portfolio/blob/main/screeshots/report_v0.png)
+![alt text](https://github.com/dszollosi/Portfolio/blob/main/screeshots/report_v1.png)
